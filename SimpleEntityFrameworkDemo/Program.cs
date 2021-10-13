@@ -1,7 +1,6 @@
 ﻿using SimpleEntityFrameworkDemo.Data;
 using SimpleEntityFrameworkDemo.Data.Entities;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SimpleEntityFrameworkDemo
@@ -10,52 +9,57 @@ namespace SimpleEntityFrameworkDemo
     {
         public static async Task Main()
         {
+            Console.WriteLine("-------------RunSuccessCase Started-------------");
+            await Try(RunSuccessCase());
+            Console.WriteLine("-------------RunSuccessCase Finished------------");
+
+            Console.WriteLine("-------------RunFailedCase Started--------------");
+            await Try(RunFailedCase());
+            Console.WriteLine("-------------RunFailedCase Finished-------------");
+        }
+
+        public static async Task RunSuccessCase()
+        {
             var factory = new DemoDbContextFactory();
             using var context = factory.CreateDbContext();
 
-            //var books = new List<Book>
-            //{
-            //    new Book
-            //    {
-            //        TenantId = Guid.NewGuid(),
-            //        Title = "test 1",
-            //        Author = new Author(),
-            //    },
-            //    new Book
-            //    {
-            //        TenantId = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be"),
-            //        Title = "test 2",
-            //        Author = new Author
-            //        {
-            //            TenantId = Guid.Parse("564a12ec-a20a-49d9-8c00-2eb17dd70fc9"),
-            //        }
-            //    },
-            //};
-            //await context.Books.AddRangeAsync(books);
 
             var book = new Book
             {
-                //Id = new Guid(),
-                //TenantId = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be"),
-                Title = "test 5",
-                //Author = new Author
-                //{
-                //    TenantId = Guid.Parse("564a12ec-a20a-49d9-8c00-2eb17dd70fc9"),
-                //},
+                TenantId = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be"),
+                Title = "Success Case",
             };
 
             await context.Books.AddAsync(book);
+            await context.SaveChangesAsync();
+        }
 
-            var book2 = new Book
+        public static async Task RunFailedCase()
+        {
+            var factory = new DemoDbContextFactory();
+            using var context = factory.CreateDbContext();
+
+
+            var book = new Book
             {
-                TenantId = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be"),
-                Title = "test 5",
-                //Author = new Author(),
+                Title = "Success Case",
             };
 
-            await context.Books.AddAsync(book2);
-
+            await context.Books.AddAsync(book);
             await context.SaveChangesAsync();
+        }
+
+        public static async Task Try(Task task)
+        {
+            try
+            {
+                await task;
+                Console.WriteLine("Success!");
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
         }
     }
 }

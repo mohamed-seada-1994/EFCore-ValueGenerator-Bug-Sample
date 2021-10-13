@@ -4,6 +4,8 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using SimpleEntityFrameworkDemo.Data.Entities;
 
 namespace SimpleEntityFrameworkDemo.Data
@@ -30,15 +32,8 @@ namespace SimpleEntityFrameworkDemo.Data
                 .Where(e => e.State is EntityState.Added or EntityState.Modified or EntityState.Deleted)
                 .ToList();
 
-            //((Book)changedEntities[0].Entity).TenantId = Guid.NewGuid();
-            //((Book)changedEntities[1].Entity).TenantId = Guid.NewGuid();
-            var a1 = changedEntities[0];
-            var a2 = changedEntities[1];
-            var e1 = changedEntities[0].Property("TenantId");
-            var e2 = changedEntities[1].Property("TenantId");
-
-            //a1.DetectChanges();
-            //e1.CurrentValue = e1.CurrentValue;
+            var IsKeyUnknown = (typeof(EntityEntry).GetProperty("InternalEntry", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(changedEntities[0]) as InternalEntityEntry).IsKeyUnknown;
+            Console.WriteLine($"IsKeyUnknown: {IsKeyUnknown}");
 
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
