@@ -17,7 +17,6 @@ namespace SimpleEntityFrameworkDemo.Data
         public DemoDbContext CreateDbContext(string[] args)
         {
             var configuration = BuildConfiguration();
-            Console.WriteLine(configuration.GetConnectionString("Default"));
             var builder = new DbContextOptionsBuilder<DemoDbContext>()
                 .UseSqlServer(configuration.GetConnectionString("Default"));
 

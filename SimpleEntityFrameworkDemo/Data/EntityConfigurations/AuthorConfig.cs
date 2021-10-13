@@ -11,9 +11,8 @@ namespace SimpleEntityFrameworkDemo.Data.EntityConfigurations
         public void Configure(EntityTypeBuilder<Author> builder)
         {
             builder.ToTable("Authors");
-
-            //builder.Property(x => x.TenantId).HasValueGenerator<TenantIdGenerator>();
-            builder.Property(b => b.Id).ValueGeneratedOnAdd();
+            builder.HasKey(a => a.Id);
+            builder.Property(a => a.Id).ValueGeneratedOnAdd();
         }
     }
 }
