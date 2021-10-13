@@ -10,7 +10,7 @@ using SimpleEntityFrameworkDemo.Data;
 namespace SimpleEntityFrameworkDemo.Migrations
 {
     [DbContext(typeof(DemoDbContext))]
-    [Migration("20211013094348_init")]
+    [Migration("20211013095325_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

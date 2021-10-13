@@ -11,10 +11,10 @@ namespace SimpleEntityFrameworkDemo.Data.EntityConfigurations
         {
             builder.ToTable("Authors");
 
-            builder.Property<Guid>("TenantId").HasValueGenerator<TenantIdGenerator>();
+            builder.Property(x => x.TenantId).HasValueGenerator<TenantIdGenerator>();
             builder.Property(b => b.Id).ValueGeneratedOnAdd();
 
-            builder.HasKey("Id", "TenantId");
+            builder.HasKey(x => new { x.Id, x.TenantId });
         }
     }
 }

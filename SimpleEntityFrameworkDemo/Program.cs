@@ -36,9 +36,12 @@ namespace SimpleEntityFrameworkDemo
             var book = new Book
             {
                 //Id = new Guid(),
-                //TenantId = Guid.NewGuid(),
-                Title = "test 4",
-                //Author = new Author(),
+                //TenantId = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be"),
+                Title = "test 5",
+                //Author = new Author
+                //{
+                //    TenantId = Guid.Parse("564a12ec-a20a-49d9-8c00-2eb17dd70fc9"),
+                //},
             };
 
             var state = await context.Books.AddAsync(book);
