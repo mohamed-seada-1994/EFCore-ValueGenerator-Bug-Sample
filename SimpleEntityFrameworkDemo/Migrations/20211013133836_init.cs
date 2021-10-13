@@ -12,7 +12,7 @@ namespace SimpleEntityFrameworkDemo.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -26,7 +26,7 @@ namespace SimpleEntityFrameworkDemo.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
@@ -42,7 +42,7 @@ namespace SimpleEntityFrameworkDemo.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Books_AuthorId_TenantId",
+                name: "IX_Books_AuthorId",
                 table: "Books",
                 columns: new[] { "AuthorId", "TenantId" });
         }

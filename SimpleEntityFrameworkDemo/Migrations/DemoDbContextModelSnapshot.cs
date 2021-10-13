@@ -25,8 +25,9 @@ namespace SimpleEntityFrameworkDemo.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -37,6 +38,9 @@ namespace SimpleEntityFrameworkDemo.Migrations
                     b.HasKey("Id", "TenantId");
 
                     b.ToTable("Authors");
+
+                    b
+                        .HasAnnotation("Finbuckle:MultiTenant", true);
                 });
 
             modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.Book", b =>
@@ -45,8 +49,9 @@ namespace SimpleEntityFrameworkDemo.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.Property<Guid?>("AuthorId")
                         .HasColumnType("uniqueidentifier");
@@ -56,9 +61,13 @@ namespace SimpleEntityFrameworkDemo.Migrations
 
                     b.HasKey("Id", "TenantId");
 
-                    b.HasIndex("AuthorId", "TenantId");
+                    b.HasIndex("AuthorId", "TenantId")
+                        .HasDatabaseName("IX_Books_AuthorId");
 
                     b.ToTable("Books");
+
+                    b
+                        .HasAnnotation("Finbuckle:MultiTenant", true);
                 });
 
             modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.Book", b =>

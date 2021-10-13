@@ -1,3 +1,4 @@
+using Finbuckle.MultiTenant.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SimpleEntityFrameworkDemo.Data.Entities;
@@ -11,10 +12,8 @@ namespace SimpleEntityFrameworkDemo.Data.EntityConfigurations
         {
             builder.ToTable("Authors");
 
-            builder.Property(x => x.TenantId).HasValueGenerator<TenantIdGenerator>();
+            //builder.Property(x => x.TenantId).HasValueGenerator<TenantIdGenerator>();
             builder.Property(b => b.Id).ValueGeneratedOnAdd();
-
-            builder.HasKey(x => new { x.Id, x.TenantId });
         }
     }
 }

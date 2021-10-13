@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Finbuckle.MultiTenant;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +21,12 @@ namespace SimpleEntityFrameworkDemo.Data
             var builder = new DbContextOptionsBuilder<DemoDbContext>()
                 .UseSqlServer(configuration.GetConnectionString("Default"));
 
-            return new DemoDbContext(builder.Options);
+            return new DemoDbContext(new TenantInfo { 
+                ConnectionString = configuration.GetConnectionString("Default"),
+                Id = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be").ToString(),
+                Identifier = "demo",
+                Name = "Demo",
+            },builder.Options);
         }
 
         private static IConfigurationRoot BuildConfiguration()

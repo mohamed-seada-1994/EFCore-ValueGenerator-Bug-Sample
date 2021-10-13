@@ -48,7 +48,7 @@ namespace SimpleEntityFrameworkDemo
 
             var book2 = new Book
             {
-                TenantId = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be"),
+                //TenantId = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be").ToString(),
                 Title = "test 5",
                 //Author = new Author(),
             };

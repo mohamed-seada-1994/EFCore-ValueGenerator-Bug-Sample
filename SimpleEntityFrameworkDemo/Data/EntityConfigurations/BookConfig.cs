@@ -12,14 +12,14 @@ namespace SimpleEntityFrameworkDemo.Data.EntityConfigurations
         {
             builder.ToTable("Books");
 
-            builder.Property(x => x.TenantId).HasValueGenerator<TenantIdGenerator>();
+            //builder.Property(x => x.TenantId).HasValueGenerator<TenantIdGenerator>();
             builder.Property(b => b.Id).ValueGeneratedOnAdd();
 
-            builder.HasKey(x => new { x.Id, x.TenantId });
+            builder.HasKey(x => x.Id);
 
             builder.HasOne(b => b.Author).WithMany(a => a.Books)
-                .HasPrincipalKey(x => new { x.Id, x.TenantId })
-                .HasForeignKey(x => new { x.AuthorId, x.TenantId });
+                .HasPrincipalKey(x => x.Id)
+                .HasForeignKey(x => x.AuthorId);
         }
     }
 }
