@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SimpleEntityFrameworkDemo.Data.Entities;
+using System;
 
 namespace SimpleEntityFrameworkDemo.Data.EntityConfigurations
 {
@@ -10,12 +11,14 @@ namespace SimpleEntityFrameworkDemo.Data.EntityConfigurations
         {
             builder.ToTable("Books");
 
-            builder.HasKey(b => new { b.Id , b.TenantId});
+            builder.Property<Guid>("TenantId").HasValueGenerator<TenantIdGenerator>();
             builder.Property(b => b.Id).ValueGeneratedOnAdd();
 
+            builder.HasKey("Id", "TenantId");
+
             builder.HasOne(b => b.Author).WithMany(a => a.Books)
-                .HasPrincipalKey(a => new { a.Id , a.TenantId})
-                .HasForeignKey(b => new { b.AuthorId, b.TenantId });
+                .HasPrincipalKey("Id", "TenantId")
+                .HasForeignKey("AuthorId", "TenantId");
         }
     }
 }

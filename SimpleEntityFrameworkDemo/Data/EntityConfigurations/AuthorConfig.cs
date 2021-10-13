@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SimpleEntityFrameworkDemo.Data.Entities;
+using System;
 
 namespace SimpleEntityFrameworkDemo.Data.EntityConfigurations
 {
@@ -10,8 +11,10 @@ namespace SimpleEntityFrameworkDemo.Data.EntityConfigurations
         {
             builder.ToTable("Authors");
 
-            builder.HasKey(a => new { a.Id, a.TenantId });
-            builder.Property(a => a.Id).ValueGeneratedOnAdd();
+            builder.Property<Guid>("TenantId").HasValueGenerator<TenantIdGenerator>();
+            builder.Property(b => b.Id).ValueGeneratedOnAdd();
+
+            builder.HasKey("Id", "TenantId");
         }
     }
 }

@@ -5,7 +5,7 @@ namespace SimpleEntityFrameworkDemo.Data.Entities
     public class Book
     {
         public Guid Id { get; set; }
-        public Guid TenantId { get; set; }
+        //public Guid TenantId { get; set; }
 
         public string Title { get; set; }
         public Guid? AuthorId { get; set; }

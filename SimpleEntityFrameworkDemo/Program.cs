@@ -36,7 +36,7 @@ namespace SimpleEntityFrameworkDemo
             var book = new Book
             {
                 //Id = new Guid(),
-                TenantId = Guid.NewGuid(),
+                //TenantId = Guid.NewGuid(),
                 Title = "test 4",
                 //Author = new Author(),
             };
