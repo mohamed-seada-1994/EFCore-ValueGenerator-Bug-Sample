@@ -44,7 +44,16 @@ namespace SimpleEntityFrameworkDemo
                 //},
             };
 
-            var state = await context.Books.AddAsync(book);
+            await context.Books.AddAsync(book);
+
+            var book2 = new Book
+            {
+                TenantId = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be"),
+                Title = "test 5",
+                //Author = new Author(),
+            };
+
+            await context.Books.AddAsync(book2);
 
             await context.SaveChangesAsync();
         }
