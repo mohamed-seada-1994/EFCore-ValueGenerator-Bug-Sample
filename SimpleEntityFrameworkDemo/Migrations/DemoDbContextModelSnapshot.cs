@@ -56,6 +56,8 @@ namespace SimpleEntityFrameworkDemo.Migrations
 
                     b.HasKey("Id", "TenantId");
 
+                    b.HasIndex("AuthorId", "TenantId");
+
                     b.ToTable("Books");
                 });
 
@@ -63,9 +65,7 @@ namespace SimpleEntityFrameworkDemo.Migrations
                 {
                     b.HasOne("SimpleEntityFrameworkDemo.Data.Entities.Author", "Author")
                         .WithMany("Books")
-                        .HasForeignKey("Id", "TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AuthorId", "TenantId");
 
                     b.Navigation("Author");
                 });

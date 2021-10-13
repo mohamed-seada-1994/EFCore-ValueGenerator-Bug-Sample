@@ -10,7 +10,7 @@ using SimpleEntityFrameworkDemo.Data;
 namespace SimpleEntityFrameworkDemo.Migrations
 {
     [DbContext(typeof(DemoDbContext))]
-    [Migration("20211012205525_init")]
+    [Migration("20211013093303_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,7 @@ namespace SimpleEntityFrameworkDemo.Migrations
             modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.Author", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TenantId")
@@ -43,18 +44,21 @@ namespace SimpleEntityFrameworkDemo.Migrations
             modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.Book", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AuthorId")
+                    b.Property<Guid?>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id", "TenantId");
+
+                    b.HasIndex("AuthorId", "TenantId");
 
                     b.ToTable("Books");
                 });
@@ -63,9 +67,7 @@ namespace SimpleEntityFrameworkDemo.Migrations
                 {
                     b.HasOne("SimpleEntityFrameworkDemo.Data.Entities.Author", "Author")
                         .WithMany("Books")
-                        .HasForeignKey("Id", "TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AuthorId", "TenantId");
 
                     b.Navigation("Author");
                 });

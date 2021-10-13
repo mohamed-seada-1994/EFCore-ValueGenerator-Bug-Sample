@@ -28,18 +28,23 @@ namespace SimpleEntityFrameworkDemo.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Books", x => new { x.Id, x.TenantId });
                     table.ForeignKey(
-                        name: "FK_Books_Authors_Id_TenantId",
-                        columns: x => new { x.Id, x.TenantId },
+                        name: "FK_Books_Authors_AuthorId_TenantId",
+                        columns: x => new { x.AuthorId, x.TenantId },
                         principalTable: "Authors",
                         principalColumns: new[] { "Id", "TenantId" },
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Books_AuthorId_TenantId",
+                table: "Books",
+                columns: new[] { "AuthorId", "TenantId" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
