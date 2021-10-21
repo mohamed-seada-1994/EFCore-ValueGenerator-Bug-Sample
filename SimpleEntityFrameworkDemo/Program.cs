@@ -9,44 +9,39 @@ namespace SimpleEntityFrameworkDemo
     {
         public static async Task Main()
         {
-            Console.WriteLine("-------------RunSuccessCase Started-------------");
-            await Try(RunSuccessCase());
-            Console.WriteLine("-------------RunSuccessCase Finished------------");
-
-            Console.WriteLine("-------------RunFailedCase Started--------------");
-            await Try(RunFailedCase());
-            Console.WriteLine("-------------RunFailedCase Finished-------------");
+            Console.WriteLine("-------------RunUpdateCase Started--------------");
+            await Try(RunUpdateCase());
+            Console.WriteLine("-------------RunUpdateCase Finished-------------");
         }
 
-        public static async Task RunSuccessCase()
+        public static async Task RunUpdateCase()
         {
             var factory = new DemoDbContextFactory();
-            using var context = factory.CreateDbContext();
-
-
             var book = new Book
             {
-                TenantId = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be"),
-                Title = "Success Case",
+                Id = Guid.NewGuid(),
+                //TenantId = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be"),
+                Title = "Added Book",
+                Author = new Author
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Test",
+                    Email = "test@test.com",
+                    //TenantId = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be"),
+                }
             };
 
-            await context.Books.AddAsync(book);
-            await context.SaveChangesAsync();
-        }
-
-        public static async Task RunFailedCase()
-        {
-            var factory = new DemoDbContextFactory();
-            using var context = factory.CreateDbContext();
-
-
-            var book = new Book
+            using (var context = factory.CreateDbContext())
             {
-                Title = "Success Case",
-            };
+                await context.Books.AddAsync(book);
+                await context.SaveChangesAsync();
+            }
 
-            await context.Books.AddAsync(book);
-            await context.SaveChangesAsync();
+            book.Author = null;
+            using (var context = factory.CreateDbContext())
+            {
+                var attachedEntry = context.Books.Attach(book);
+            }
         }
 
         public static async Task Try(Task task)
