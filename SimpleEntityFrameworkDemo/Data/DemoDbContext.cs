@@ -15,6 +15,7 @@ namespace SimpleEntityFrameworkDemo.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<Book> Books { get; set; }
 
+        public DbSet<Student> Students { get; set; }
         public DemoDbContext(DbContextOptions options)
             : base(options)
         {
@@ -33,8 +34,8 @@ namespace SimpleEntityFrameworkDemo.Data
                 .ToList();
 
 
-            var IsKeyUnknown = (typeof(EntityEntry).GetProperty("InternalEntry", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(changedEntities[0]) as InternalEntityEntry).IsKeyUnknown;
-            Console.WriteLine($"IsKeyUnknown: {IsKeyUnknown}");
+            //var IsKeyUnknown = (typeof(EntityEntry).GetProperty("InternalEntry", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(changedEntities[0]) as InternalEntityEntry).IsKeyUnknown;
+            //Console.WriteLine($"IsKeyUnknown: {IsKeyUnknown}");
 
             var addedEntities = ChangeTracker.Entries()
                 .Where(e => e.State is EntityState.Added);
@@ -46,8 +47,8 @@ namespace SimpleEntityFrameworkDemo.Data
             }
 
 
-            IsKeyUnknown = (typeof(EntityEntry).GetProperty("InternalEntry", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(changedEntities[0]) as InternalEntityEntry).IsKeyUnknown;
-            Console.WriteLine($"IsKeyUnknown: {IsKeyUnknown}");
+            //IsKeyUnknown = (typeof(EntityEntry).GetProperty("InternalEntry", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(changedEntities[0]) as InternalEntityEntry).IsKeyUnknown;
+            //Console.WriteLine($"IsKeyUnknown: {IsKeyUnknown}");
 
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }

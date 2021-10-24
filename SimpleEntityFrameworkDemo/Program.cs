@@ -1,6 +1,7 @@
 ﻿using SimpleEntityFrameworkDemo.Data;
 using SimpleEntityFrameworkDemo.Data.Entities;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SimpleEntityFrameworkDemo
@@ -9,25 +10,26 @@ namespace SimpleEntityFrameworkDemo
     {
         public static async Task Main()
         {
-            Console.WriteLine("-------------RunUpdateCase Started--------------");
-            await Try(RunUpdateCase());
-            Console.WriteLine("-------------RunUpdateCase Finished-------------");
+            Console.WriteLine("---------------- ValueGeneration With (FK) Started ------------------");
+            await Try(RunValueGenerationWithFK());
+            Console.WriteLine("---------------- ValueGeneration With (FK) Finished -----------------");
+
+            Console.WriteLine("----------- ValueGeneration Without (FK) Finished ------------");
+            await Try(RunValueGenerationWithoutFK());
+            Console.WriteLine("----------- ValueGeneration Without (FK) Finished ------------");
         }
 
-        public static async Task RunUpdateCase()
+        public static async Task RunValueGenerationWithFK()
         {
             var factory = new DemoDbContextFactory();
             var book = new Book
             {
                 Id = Guid.NewGuid(),
-                //TenantId = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be"),
-                Title = "Added Book",
+                Title = "Book",
                 Author = new Author
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Test",
-                    Email = "test@test.com",
-                    //TenantId = Guid.Parse("75e85884-0e27-4be1-9a1e-56fbcfccd8be"),
+                    Name = "Author",
                 }
             };
 
@@ -35,12 +37,39 @@ namespace SimpleEntityFrameworkDemo
             {
                 await context.Books.AddAsync(book);
                 await context.SaveChangesAsync();
+
             }
 
-            book.Author = null;
+            book.TenantId = default;
             using (var context = factory.CreateDbContext())
             {
                 var attachedEntry = context.Books.Attach(book);
+
+                Console.WriteLine($"Expected: Unchanged, Actual: {attachedEntry.State}");
+            }
+        }
+
+        public static async Task RunValueGenerationWithoutFK()
+        {
+            var factory = new DemoDbContextFactory();
+            var student = new Student
+            {
+                Id = Guid.NewGuid(),
+                Name = "Student",
+            };
+
+            using (var context = factory.CreateDbContext())
+            {
+                await context.Students.AddAsync(student);
+                await context.SaveChangesAsync();
+            }
+
+            student.TenantId = default;
+            using (var context = factory.CreateDbContext())
+            {
+                var attachedEntry = context.Students.Attach(student);
+
+                Console.WriteLine($"Expected: Unchanged, Actual: {attachedEntry.State}");
             }
         }
 

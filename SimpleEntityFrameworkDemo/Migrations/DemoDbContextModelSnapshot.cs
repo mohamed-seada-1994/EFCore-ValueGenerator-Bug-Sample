@@ -61,6 +61,26 @@ namespace SimpleEntityFrameworkDemo.Migrations
                     b.ToTable("Books");
                 });
 
+            modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.Student", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id", "TenantId");
+
+                    b.ToTable("Student");
+                });
+
             modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.Book", b =>
                 {
                     b.HasOne("SimpleEntityFrameworkDemo.Data.Entities.Author", "Author")

@@ -18,7 +18,7 @@ namespace SimpleEntityFrameworkDemo.Data.EntityConfigurations
             builder.HasKey("Id", "TenantId");
             builder.HasOne(b => b.Author).WithMany(a => a.Books)
                 .HasPrincipalKey("Id","TenantId")
-                .HasForeignKey("Id", "TenantId");
+                .HasForeignKey("AuthorId", "TenantId");
         }
     }
 }
