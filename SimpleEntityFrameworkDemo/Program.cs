@@ -40,6 +40,7 @@ namespace SimpleEntityFrameworkDemo
 
             }
 
+            book.Author = null;
             book.TenantId = default;
             using (var context = factory.CreateDbContext())
             {
