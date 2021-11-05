@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleEntityFrameworkDemo.Data;
 
+#nullable disable
+
 namespace SimpleEntityFrameworkDemo.Migrations
 {
     [DbContext(typeof(DemoDbContext))]
@@ -15,9 +17,10 @@ namespace SimpleEntityFrameworkDemo.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.11")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.0-rc.2.21480.5")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.Author", b =>
                 {
@@ -36,7 +39,7 @@ namespace SimpleEntityFrameworkDemo.Migrations
 
                     b.HasKey("Id", "TenantId");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.Book", b =>
@@ -58,7 +61,7 @@ namespace SimpleEntityFrameworkDemo.Migrations
 
                     b.HasIndex("AuthorId", "TenantId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.Student", b =>
@@ -78,7 +81,49 @@ namespace SimpleEntityFrameworkDemo.Migrations
 
                     b.HasKey("Id", "TenantId");
 
-                    b.ToTable("Student");
+                    b.ToTable("Student", (string)null);
+                });
+
+            modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.UserClaim", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Claim")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id", "TenantId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserClaims", (string)null);
                 });
 
             modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.Book", b =>
@@ -90,9 +135,25 @@ namespace SimpleEntityFrameworkDemo.Migrations
                     b.Navigation("Author");
                 });
 
+            modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.UserClaim", b =>
+                {
+                    b.HasOne("SimpleEntityFrameworkDemo.Data.Entities.User", "User")
+                        .WithMany("Claims")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.Author", b =>
                 {
                     b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.User", b =>
+                {
+                    b.Navigation("Claims");
                 });
 #pragma warning restore 612, 618
         }

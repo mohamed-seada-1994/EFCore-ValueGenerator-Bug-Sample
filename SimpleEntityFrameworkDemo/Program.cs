@@ -1,7 +1,6 @@
 ﻿using SimpleEntityFrameworkDemo.Data;
 using SimpleEntityFrameworkDemo.Data.Entities;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SimpleEntityFrameworkDemo
@@ -10,16 +9,52 @@ namespace SimpleEntityFrameworkDemo
     {
         public static async Task Main()
         {
-            Console.WriteLine("---------------- ValueGeneration With (FK) Started ------------------");
-            await Try(RunValueGenerationWithFK());
-            Console.WriteLine("---------------- ValueGeneration With (FK) Finished -----------------");
+            Console.WriteLine("---------------- ValueGeneration With Simple (FK) Started ------------------");
+            await Try(RunValueGenerationWithSimpleFK());
+            Console.WriteLine("---------------- ValueGeneration With Simple (FK) Finished -----------------");
+
+            Console.WriteLine("---------------- ValueGeneration With Generated (FK) Started ------------------");
+            await Try(RunValueGenerationWithGeneratedFK());
+            Console.WriteLine("---------------- ValueGeneration With Generated (FK) Finished -----------------");
 
             Console.WriteLine("----------- ValueGeneration Without (FK) Finished ------------");
             await Try(RunValueGenerationWithoutFK());
             Console.WriteLine("----------- ValueGeneration Without (FK) Finished ------------");
         }
 
-        public static async Task RunValueGenerationWithFK()
+        public static async Task RunValueGenerationWithSimpleFK()
+        {
+            var factory = new DemoDbContextFactory();
+            var userClaim = new UserClaim
+            {
+                Id = Guid.NewGuid(),
+                Claim = "Role",
+                Value = "Member",
+                User = new User
+                {
+                    Id = Guid.NewGuid(),
+                    Email = "user@domain.name",
+                }
+            };
+
+            using (var context = factory.CreateDbContext())
+            {
+                await context.UserClaims.AddAsync(userClaim);
+                await context.SaveChangesAsync();
+
+            }
+
+            userClaim.User = null;
+            userClaim.TenantId = default;
+            using (var context = factory.CreateDbContext())
+            {
+                var attachedEntry = context.UserClaims.Attach(userClaim);
+
+                Console.WriteLine($"Expected: Unchanged, Actual: {attachedEntry.State}");
+            }
+        }
+
+        public static async Task RunValueGenerationWithGeneratedFK()
         {
             var factory = new DemoDbContextFactory();
             var book = new Book
@@ -79,7 +114,7 @@ namespace SimpleEntityFrameworkDemo
             try
             {
                 await task;
-                Console.WriteLine("Success!");
+                // Console.WriteLine("Success!");
             }
             catch (Exception exception)
             {
