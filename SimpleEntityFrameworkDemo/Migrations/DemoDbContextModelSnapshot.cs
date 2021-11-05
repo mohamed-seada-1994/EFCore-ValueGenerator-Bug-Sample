@@ -81,6 +81,48 @@ namespace SimpleEntityFrameworkDemo.Migrations
                     b.ToTable("Student");
                 });
 
+            modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.UserClaim", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Claim")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id", "TenantId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserClaims");
+                });
+
             modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.Book", b =>
                 {
                     b.HasOne("SimpleEntityFrameworkDemo.Data.Entities.Author", "Author")
@@ -90,9 +132,25 @@ namespace SimpleEntityFrameworkDemo.Migrations
                     b.Navigation("Author");
                 });
 
+            modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.UserClaim", b =>
+                {
+                    b.HasOne("SimpleEntityFrameworkDemo.Data.Entities.User", "User")
+                        .WithMany("Claims")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.Author", b =>
                 {
                     b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("SimpleEntityFrameworkDemo.Data.Entities.User", b =>
+                {
+                    b.Navigation("Claims");
                 });
 #pragma warning restore 612, 618
         }
